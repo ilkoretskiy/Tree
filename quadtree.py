@@ -99,12 +99,17 @@ class Node(object):
 		if type(point) != Point:
 			point = Point(point)
 		self.__points.append(point)
-		if self.__need_to_split():
+		if self.__need_to_split() and self.__can_split():
 			self.__split_node()
-	
+		
+		if not self.__can_split():
+			print "can't split"
 			
 	def __need_to_split(self):
 		return len(self.__points) > self.__capacity
+		
+	def __can_split(self):
+		return abs(self.__rect.width - self.__rect.x) > 1 and abs(self.__rect.height - self.__rect.y)
 	
 	def __split_rect_by_index(self, rect, idx):
 		output_rect = None
@@ -186,8 +191,8 @@ class Tree(object):
 
 canvas_size = {'width' : 800, 'height' : 800}
 canvas_rect = Rect(0, 0, canvas_size['width'], canvas_size['height'])
-point_per_node = 2
-tree = Tree(canvas_rect, node_capacity = 2)
+point_per_node = 1
+tree = Tree(canvas_rect, node_capacity = point_per_node)
 
 def callback(event):
 	point = (event.x, event.y)
